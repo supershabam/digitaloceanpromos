@@ -34,11 +34,39 @@ body, html {
 
   // mouse locations
   var mx = 0, my = 0
+  var capturedMouse = false
   document.addEventListener('mousemove', function(e) {
     mx = e.clientX
     my = e.clientY
     promo.style.display = 'block'
+    capturedMouse = true
   })
+  
+  // mouse movement intensity [0,1]
+  var mouseHistory = []
+  function mouseIntensity() {
+    if (mouseHistory.length == 0) return 0
+    return mouseHistory.reduce(function(memo, n) {
+      return memo + n
+    }, 0) / mouseHistory.length
+  }
+  var lastmx = 0, lastmy = 0
+  setInterval(function() {
+    if (!capturedMouse) return
+    if (lastmx != 0 && lastmy != 0) {
+      var ww = window.innerWidth
+      var wh = window.innerHeight
+      var dx = mx - lastmx
+      var dy = my - lastmy
+      var intensity = Math.sqrt(dx * dx + dy * dy) / Math.sqrt(ww * ww, wh * wh)
+      mouseHistory.push(intensity)
+      if (mouseHistory.length > 100) {
+        mouseHistory.splice(0, 1)
+      }
+    }
+    lastmx = mx
+    lastmy = my 
+  }, 30)
 
   function step(t) {
     moveZach(t)
@@ -73,8 +101,12 @@ body, html {
     promo.style.transform = 'translate(' + (x - w/2) + 'px,' + (y - h/2) + 'px)'
   }
 
+  var intensityCount = 0
   function moveZach(t) {
     zach.style.display = 'block'
+
+    var mi = mouseIntensity()
+    intensityCount += mi
     // window width and height
     var ww = window.innerWidth
     var wh = window.innerHeight
@@ -84,12 +116,11 @@ body, html {
     var h = zach.offsetHeight
   
     // rotate
-    var r = t / 2.5
-  
+    var r = (t / 20) + intensityCount * 20
+    var et = (t / 700) + intensityCount
     // get x y from interesting parametric equation
-    var speed = 0.004 + 0.00 * (Math.sin(t/1000) + 1)
-    var vx = 11 * Math.cos(t * speed) - 6 * Math.cos(11/6 * t * speed)
-    var vy = 11 * Math.sin(t * speed) - 6 * Math.sin(11/6 * t * speed)
+    var vx = 11 * Math.cos(et) - 6 * Math.cos(11/6 * et)
+    var vy = 11 * Math.sin(et) - 6 * Math.sin(11/6 * et)
     // unit vector the result
     var norm = Math.sqrt(vx * vx + vy * vy)
     ux = vx / norm
@@ -101,7 +132,7 @@ body, html {
         (1/8 * wh) -     // center ourselves within the height
         (1/2 * h)        // offset to center of zach image
 
-    zach.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg)'
+    zach.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg) scale(' + (mi * 50) + ',' + (mi * 50) + ')'
 
   }
   window.requestAnimationFrame(step)
