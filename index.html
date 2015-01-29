@@ -11,9 +11,12 @@ body, html {
   margin: 0 auto;
 }
 #zach {
+  display: none;
   position: absolute;
 }
 #promo {
+  display: none;
+
   background: #215f8b;
   position: absolute;
   border: 1px solid #dadada;
@@ -34,6 +37,7 @@ body, html {
   document.addEventListener('mousemove', function(e) {
     mx = e.clientX
     my = e.clientY
+    promo.style.display = 'block'
   })
 
   function step(t) {
@@ -55,7 +59,7 @@ body, html {
     var y = cy
 
     // defense circle
-    var radius = w
+    var radius = w * 1.5
     var dx = cx - mx
     var dy = cy - my
     var l = Math.sqrt(dx * dx, dy * dy)
@@ -70,6 +74,7 @@ body, html {
   }
 
   function moveZach(t) {
+    zach.style.display = 'block'
     // window width and height
     var ww = window.innerWidth
     var wh = window.innerHeight
