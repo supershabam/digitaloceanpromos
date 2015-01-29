@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<script src="//use.typekit.net/grm4nxy.js"></script>
+<script>try{Typekit.load();}catch(e){}</script>
+<style>
+body, html { 
+  font-family: proxima-nova, sans-serif;
+  font-size: 13px;
+  background-color: #368eca;
+  color: white;
+  height: 100%;
+  margin: 0;
+}
+</style>
+<img id="zach" src="https://www.digitalocean.com/assets/images/employees/zach_bouzan-kaloustian-eff91e4b.png" />
+<span id="promo">ZACHFORPRESIDENT</span>
+<script>
+  var zach = document.getElementById('zach')
+  function step(t) {
+    // window width and height
+    var ww = window.innerWidth
+    var wh = window.innerHeight
+  
+    // image width and height
+    var w = zach.offsetWidth
+    var h = zach.offsetHeight
+  
+    // rotate
+    var r = t / 2.5
+  
+    // get x y from interesting parametric equation
+    var speed = 0.004 + 0.00 * (Math.sin(t/1000) + 1)
+    console.log(speed)
+    var vx = 11 * Math.cos(t * speed) - 6 * Math.cos(11/6 * t * speed)
+    var vy = 11 * Math.sin(t * speed) - 6 * Math.sin(11/6 * t * speed)
+    // unit vector the result
+    var norm = Math.sqrt(vx * vx + vy * vy)
+    ux = vx / norm
+    uy = vy / norm
+    // project ux and uy onto 3/4 of available window
+    x = ((ux + 1) / 2) * (3/4 * ww) + (1/8 * ww) - (1/2 * w)
+    y = ((uy + 1) / 2) * // percentage of y from [0,1]
+        (3/4 * wh) +     // times available height pixels
+        (1/8 * wh) -     // center ourselves within the height
+        (1/2 * h)        // offset to center of zach image
+
+    zach.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg)'
+
+    window.requestAnimationFrame(step)
+  }
+  window.requestAnimationFrame(step)
+</script>
