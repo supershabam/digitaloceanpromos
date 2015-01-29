@@ -8,14 +8,68 @@ body, html {
   background-color: #368eca;
   color: white;
   height: 100%;
-  margin: 0;
+  margin: 0 auto;
+}
+#zach {
+  position: absolute;
+}
+#promo {
+  background: #215f8b;
+  position: absolute;
+  border: 1px solid #dadada;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  padding: 10px 11px;
 }
 </style>
 <img id="zach" src="https://www.digitalocean.com/assets/images/employees/zach_bouzan-kaloustian-eff91e4b.png" />
-<span id="promo">ZACHFORPRESIDENT</span>
+<span id="promo">CLICK FOR PROMO CODE</span>
 <script>
   var zach = document.getElementById('zach')
+  var promo = document.getElementById('promo')
+
+  // mouse locations
+  var mx = 0, my = 0
+  document.addEventListener('mousemove', function(e) {
+    mx = e.clientX
+    my = e.clientY
+  })
+
   function step(t) {
+    moveZach(t)
+    movePromo(t)
+    window.requestAnimationFrame(step)
+  }
+  
+  function movePromo(t) {
+    // window width and height
+    var ww = window.innerWidth
+    var wh = window.innerHeight
+    var w = promo.offsetWidth
+    var h = promo.offsetHeight
+    var cx = ww / 2
+    var cy = wh / 2
+    // by default center the element
+    var x = cx
+    var y = cy
+
+    // defense circle
+    var radius = w
+    var dx = cx - mx
+    var dy = cy - my
+    var l = Math.sqrt(dx * dx, dy * dy)
+    if (l < radius) {
+      var angle = Math.atan2(dy, dx)
+      var m = (radius - l) / radius
+      x = x + m * m * m * 5 * w * Math.cos(angle)
+      y = y + m * m * m * 15 * h * Math.sin(angle)
+    }
+
+    promo.style.transform = 'translate(' + (x - w/2) + 'px,' + (y - h/2) + 'px)'
+  }
+
+  function moveZach(t) {
     // window width and height
     var ww = window.innerWidth
     var wh = window.innerHeight
@@ -29,7 +83,6 @@ body, html {
   
     // get x y from interesting parametric equation
     var speed = 0.004 + 0.00 * (Math.sin(t/1000) + 1)
-    console.log(speed)
     var vx = 11 * Math.cos(t * speed) - 6 * Math.cos(11/6 * t * speed)
     var vy = 11 * Math.sin(t * speed) - 6 * Math.sin(11/6 * t * speed)
     // unit vector the result
@@ -45,7 +98,6 @@ body, html {
 
     zach.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg)'
 
-    window.requestAnimationFrame(step)
   }
   window.requestAnimationFrame(step)
 </script>
