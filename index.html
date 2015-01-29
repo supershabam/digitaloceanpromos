@@ -98,7 +98,9 @@ body, html {
       y = y + m * m * m * 15 * h * Math.sin(angle)
     }
 
-    promo.style.transform = 'translate(' + (x - w/2) + 'px,' + (y - h/2) + 'px)'
+    var value = 'translate(' + (x - w/2) + 'px,' + (y - h/2) + 'px)'
+    promo.style.transform = value
+    promo.style.WebkitTransform = value
   }
 
   var intensityCount = 0
@@ -132,7 +134,9 @@ body, html {
         (1/8 * wh) -     // center ourselves within the height
         (1/2 * h)        // offset to center of zach image
 
-    zach.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg) scale(' + (mi * 50) + ',' + (mi * 50) + ')'
+    var value = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg) scale(' + (mi * 50) + ',' + (mi * 50) + ')'
+    zach.style.transform = value
+    zach.style.WebkitTransform = value
 
   }
   window.requestAnimationFrame(step)
